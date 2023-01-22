@@ -2,7 +2,13 @@ const express = require("express");
 const UserModel = require("../src/models/user.model");
 const app = express();
 app.use(express.json());
-
+app.use((req, res, next) => {
+  console.log("Request Type: " + req.method);
+  console.log("Content Type: " + req.headers["content-type"]);
+  console.log("Date: " + new Date());
+  console.log(req.body);
+  next();
+});
 app.get("/users", async (req, res) => {
   try {
     const users = await UserModel.find({});
@@ -38,7 +44,6 @@ app.delete("/users/:id", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-
 app.post("/users", async (req, res) => {
   try {
     const user = await UserModel.create(req.body);
